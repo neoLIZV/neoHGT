@@ -1,0 +1,101 @@
+"""
+////////////////////////////////////////////////////////////
+│	
+│	Filename:	neoHGT
+│	Comment:	Installation script
+│	
+│	=======================================================
+│	Authorship:	neoLIZV
+│	Copyright:	Confidential, proprietary, and copyrighted.
+│	Made with love by @neoLIZV https://github.com/neoLIZV
+│	
+////////////////////////////////////////////////////////////
+"""
+#!/usr/bin/env python3
+
+import sys
+import argparse
+from importlib import import_module
+
+import neoHGT.__init__ as init
+
+
+module_names = ('search', 'analyze', 'database')
+
+
+def main():
+    # load modules
+    modules = []
+    for name in module_names:
+        module = getattr(import_module(
+            'neoHGT.{}'.format(name)), name.capitalize())()
+        modules.append([name, module])
+
+    # parse command-line arguments
+    args = parse_args(modules)
+
+    # execute selected module
+    for name, module in modules:
+        if name == args.command:
+            module(args)
+            break
+
+
+def parse_args(modules):
+    """Parse command-line arguments.
+
+    Parameters
+    ----------
+    modules : list of list
+        [name, class]
+        modules which define sub-commands
+
+    Returns
+    -------
+    dict
+        arguments
+    """
+    parser = argparse.ArgumentParser(
+        description=init.__description__, add_help=False,
+        epilog=f'version: {init.__version__}',
+        formatter_class=argparse.RawDescriptionHelpFormatter)
+    subparsers = parser.add_subparsers(
+        title='commands', dest='command', required=True)
+
+    # add sub-commands for modules
+    for name, module in modules:
+        par = cmd = subparsers.add_parser(
+            name, help=module.description,
+            formatter_class=argparse.RawDescriptionHelpFormatter)
+        for arg in module.arguments:
+            # create argument group
+            if isinstance(arg, str):
+                if arg == '*':
+                    par = cmd.add_mutually_exclusive_group(required=True)
+                else:
+                    par = cmd.add_argument_group(arg)
+            # add argument
+            else:
+                flags = arg[0].split('|')
+                kwargs = arg[2] if len(arg) > 2 else {}
+                helpinfo = (arg[1] if len(arg) == 2 or 'choices' not in arg[2]
+                            else '{} ({})'.format(
+                                arg[1], ', '.join(arg[2]['choices'])))
+                par.add_argument(*flags, **kwargs, help=helpinfo)
+        for arg in cmd._actions:
+            # argparse bug which crashes when required and empty metavar
+            arg.metavar = '\b' if arg.required else ''
+
+    # show interface
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(0)
+    try:
+        return parser.parse_args()
+    except TypeError:
+        parser.print_help()
+        sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()
