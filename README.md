@@ -79,9 +79,31 @@ This following table explains the command and options available for you to build
 | Command | Options |
 |---------|---------|
 | -c (-cats)      | archaea, bacteria, fungi, invertebrate, plant, protozoa, vertebrate_mammalian, vertebrate_other, and viral |
-| -o      | Output directory |
+| -o      | Output database directory |
 
 For more advanced options such as excluding specific taxids, please refer to HGTector's [Database](https://github.com/qiyunlab/HGTector/blob/master/doc/database.md) documentation.
+
+Known issue:
+
+Don't panic if you see this error message:
+```
+File "/Users/___/miniconda3/envs/neoHGT/lib/python3.11/site-packages/neoHGT/database.py", line 351, in get_categories
+    raise ValueError(
+ValueError: "___" is not a valid RefSeq genome category
+```
+
+This error occurs when the NCBI server has temporarily shuted-down the connection from you (refused your connection). There is nothing wrong with the program itself.
+
+The best thing you can do when having this error is to test your connection by entering the following command to the terminal:
+
+```
+rsync --list-only --no-motd rsync://ftp.ncbi.nlm.nih.gov/genomes/refseq/
+```
+
+If you see something like ```rsync: failed to connect to ftp.ncbi.nlm.nih.gov: Connection refused (61)
+rsync error: error in socket IO (code 10)```, it confirms that, indeed, there is a network issue (likely from the NCBI server side).
+
+Otherwise, if the previous command returns you a list that starts with ```drwxr-sr-x```, followed by something like ```lrwxrwxrwx```, it means the connection is restored, and you can safely execute the program again.
 
 ## Search
 
