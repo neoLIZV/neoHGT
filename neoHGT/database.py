@@ -672,7 +672,8 @@ class Database(object):
 		pool.join()
 		with open(f'{ldir}/download_result_{datetime.now().strftime("%Y-%m-%d%H:%M:%S")}.txt', 'w') as fb:
 			for line in results:
-				fb.write(line + '\n')
+				if line is not None:
+					fb.write(line + '\n')
 		print('Done.')
 
 		# drop genomes that cannot be retrieved
