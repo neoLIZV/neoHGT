@@ -69,7 +69,7 @@ Compared to HGTector, neoHGT not only fixes some known bugs of HGTector but also
 The command that I used to build the database is:
 
 ```
-hgtector database -c bacteria,archaea -o <FOLDER_NAME>
+neoHGT database -c bacteria,archaea -o <FOLDER_NAME>
 ```
 
 where ```-c``` or equivalently ```-cats``` means category.
