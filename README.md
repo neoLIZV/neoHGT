@@ -62,20 +62,38 @@ pip install git+https://github.com/neoLIZV/neoHGT.git
 
 ## Database
 
-Compared to HGTector, neoHGT uses multi-processes to enable parallel downloading, saving you time on the database downloading process. 
+![Database comparison between HGTector and neoHGT](./Database.gif)
 
+Compared to HGTector, neoHGT not only fixes some known bugs of HGTector but also uses multi-processes to enable parallel downloading, saving you time on the database downloading process.
+
+The command that I used to build the database is:
+
+```
+hgtector database -c bacteria,archaea -o <FOLDER_NAME>
+```
+
+where ```-c``` or equivalently ```-cats``` means category.
+
+This following table explains the command and options available for you to build a customized database.
+
+| Command | Options |
+|---------|---------|
+| -c (-cats)      | archaea, bacteria, fungi, invertebrate, plant, protozoa, vertebrate_mammalian, vertebrate_other, and viral |
+| -o      | Output directory |
+
+For more advanced options such as excluding specific taxids, please refer to HGTector's [Database](https://github.com/qiyunlab/HGTector/blob/master/doc/database.md) documentation.
 
 ## Search
 
 neoHGT added `try` and `except` to make the searching process more robust.
 
-To perform a search, please refer to [HGTector's Search](https://github.com/qiyunlab/HGTector/blob/master/doc/search.md) for more information.
+To perform a search, please refer to [HGTector's Search](https://github.com/qiyunlab/HGTector/blob/master/doc/search.md) documentation.
 
 ## Analyze
 
 neoHGT changed the output format of the graph from `.png` to `.pdf` for better resolution and publication purposes.
 
-To perform analysis, please refer to [HGTector's Analyze](https://github.com/qiyunlab/HGTector/blob/master/doc/analyze.md) for more information.
+To perform analysis, please refer to [HGTector's Analyze](https://github.com/qiyunlab/HGTector/blob/master/doc/analyze.md) documentation.
 
 
 ## Lastly
