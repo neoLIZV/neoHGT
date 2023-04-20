@@ -711,6 +711,7 @@ class Database(object):
 				temp = len(prots[cp]['seq'])
 				del prots[cp]
 				#/*====================*/
+				prots[cp] = {}
 				prots[cp]['aa'] = temp
 
 		g2n, g2aa = {}, {}
