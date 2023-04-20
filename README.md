@@ -9,7 +9,7 @@
 
 Updated on April 2023.
 
-To see the previous version neoHGT1, you may visit [here](https://www.github.com/cgneo/neoHGT)
+To see the previous version neoHGT1, you may find it [here](https://www.github.com/cgneo/neoHGT).
 
 
 ## Table of Contents
@@ -27,9 +27,8 @@ To see the previous version neoHGT1, you may visit [here](https://www.github.com
 
   
 
-
 ## Installation
-The project is written in Python3.<br>
+The project is written entirely in Python3.<br>
 Recommended installation method:
 
 Step 1/3:
@@ -69,7 +68,7 @@ Compared to HGTector, neoHGT not only fixes some known bugs of HGTector but also
 The command that I used to build the database is:
 
 ```
-neoHGT database -c bacteria,archaea -o <FOLDER_NAME>
+neoHGT database -c bacteria,archaea,viral -o <FOLDER_NAME>
 ```
 
 where ```-c``` or equivalently ```-cats``` means category.
@@ -78,10 +77,8 @@ This following table explains the command and options available for you to build
 
 | Command | Options |
 |---------|---------|
-| -c (-cats)      | archaea, bacteria, fungi, invertebrate, plant, protozoa, vertebrate_mammalian, vertebrate_other, and viral |
+| -c (-cats)      | archaea, bacteria, fungi, invertebrate, metagenomes, mitochondrion, plant, plasmid, plastid, protozoa, unknown, vertebrate_mammalian, vertebrate_other, and viral (derived from the [folder names of NCBI RefSeq database](https://ftp.ncbi.nlm.nih.gov/genomes/refseq/)) |
 | -o      | Output database directory |
-
-For more advanced options such as excluding specific taxids, please refer to HGTector's [Database](https://github.com/qiyunlab/HGTector/blob/master/doc/database.md) documentation.
 
 Known issue:
 
@@ -92,7 +89,7 @@ File "/Users/___/miniconda3/envs/neoHGT/lib/python3.11/site-packages/neoHGT/data
 ValueError: "___" is not a valid RefSeq genome category
 ```
 
-This error occurs when the NCBI server has temporarily shuted-down the connection from you (refused your connection). There is nothing wrong with the program itself.
+This error occurs either when you typed a category with a wrong name (for example ```virus``` folder does not exist on NCBI server, you should type ```viral``` instead) or when the NCBI server has temporarily shuted-down the connection from you (refused your connection). There is nothing wrong with the program itself.
 
 The best thing you can do when having this error is to test your connection by entering the following command to the terminal:
 
@@ -105,7 +102,44 @@ rsync error: error in socket IO (code 10)```, it confirms that, indeed, there is
 
 Otherwise, if the previous command returns you a list that starts with ```drwxr-sr-x```, followed by something like ```lrwxrwxrwx```, it means the connection is restored, and you can safely execute the program again.
 
+For more advanced options such as excluding specific taxids, please refer to HGTector's [Database](https://github.com/qiyunlab/HGTector/blob/master/doc/database.md) documentation.
+
+## Compiling
+
+After seeing the program finished with ```Done```, you can proceed with manual compiling.
+
+I will only be using Diamond because it is optimized and faster.
+
+Step 1/2:
+```
+cd <DATABASE_DIRECTORY>
+echo $'accession.version\ttaxid' | cat - <(zcat taxon.map.gz) > prot.accession2taxid.FULL
+```
+In this step, you may encounter a strange error like ```zcat: can't stat: taxon.map.gz (taxon.map.gz.Z): No such file or directory```. If you see this, just simply rename the ```taxon.map.gz``` file into ```taxon.map.gz.Z```.
+
+Step 2/2:
+
+Make sure you are still in the ```<DATABASE_DIRECTORY>```, then enter the following command:
+
+```
+mkdir diamond
+diamond makedb --threads 64 --in db.faa --taxonmap prot.accession2taxid.FULL --taxonnodes taxdump/nodes.dmp --taxonnames taxdump/names.dmp --db diamond/db
+```
+
+Feel free to clean up everything except for diamond database and the taxdump files because that's the only file we need for the ```search``` process.
+
 ## Search
+
+After ensuring the conda environment,
+
+```
+conda activate neoHGT
+```
+, this following command will perform the search process:
+
+```
+neoHGT search -i <input_file.faa.gz> -o . -m diamond -p 32 -d <diamond_db> -t <taxdump_dir>
+```
 
 neoHGT added `try` and `except` to make the searching process more robust.
 
