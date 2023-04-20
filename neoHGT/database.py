@@ -998,6 +998,6 @@ class Database(object):
 				print(f'  WARNING: existing local file {basename(file)} will be overwritten.')
 				remove(file)
 			else:
-				print(f'  Using local file {basename(file)}.')
+				#print(f'  Using local file {basename(file)}.')
 				return True
 		return False
