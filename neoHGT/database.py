@@ -350,7 +350,7 @@ class Database(object):
 			for cat in self.cats:
 				if cat not in cats:
 					raise ValueError(
-						f'"{cat}" is not a valid {target} genome category.')
+						f'😌 No worries. This error ("{cat}" is not a valid {target} genome category) occurs either when you typed a category with a wrong name (for example virus (invalid) instead of viral) or when the NCBI server has temporarily shuted-down the connection from you (in which a cup of coffee ☕️ will help)')
 
 			# get genome list per category
 			print(f'Downloading genome list per {target} category...')
