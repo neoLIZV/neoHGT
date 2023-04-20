@@ -26,7 +26,7 @@ import pandas as pd
 from datetime import datetime
 from multiprocessing import Pool, cpu_count
 #//////////////////////////////////////////////////
-import objgraph
+#import objgraph # for debugging memory leaks
 
 from neoHGT.util import (
 	timestamp, load_configs, get_config, arg2bool, run_command,
@@ -694,7 +694,9 @@ class Database(object):
 		"""
 		print('Extracting downloaded genomic data...', end='', flush=True)
 		ldir = join(self.down, 'faa')
-		prots = {}
+		#/*====================*/
+		prots = {} # memory leak warning
+		#/*====================*/
 		cp = None  # current protein accession
 		fout = open(join(self.output, 'db.faa'), 'w')
 
@@ -705,9 +707,10 @@ class Database(object):
 			except KeyError:
 				return
 			else:
+				#/*====================*/
+				prots.remove(cp)
+				#/*====================*/
 				prots[cp]['aa'] = len(prots[cp]['seq'])
-				del prots[cp]['name']
-				del prots[cp]['seq']
 
 		g2n, g2aa = {}, {}
 		#//////////////////////////////////////////////////
@@ -748,7 +751,9 @@ class Database(object):
 			#//////////////////////////////////////////////////
 			counter += 1
 			print(f'{counter}/{self.df.shape[0]}: Extracted {stem}.')
-			objgraph.show_most_common_types(limit=5)
+			#//////////////////////////////////////////////////
+			#debugging memory leaks
+			# objgraph.show_most_common_types(limit=5)
 			#//////////////////////////////////////////////////
 		fout.close()
 		print('✅ Done.')
