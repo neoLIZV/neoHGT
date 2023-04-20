@@ -126,7 +126,7 @@ def download_parallel(formatted_input):
 	except Exception as e:
 		print(e)
 #//////////////////////////////////////////////////
- 
+
 class Database(object):
 
 	def __init__(self):
@@ -709,6 +709,9 @@ class Database(object):
 				del prots[cp]['seq']
 
 		g2n, g2aa = {}, {}
+		#//////////////////////////////////////////////////
+		counter = 0
+		#//////////////////////////////////////////////////
 		for row in self.df.itertuples():
 			g, tid = row.genome, row.taxid
 			g2n[g], g2aa[g] = 0, 0
@@ -741,6 +744,9 @@ class Database(object):
 					prots[cp]['seq'] += line
 					g2aa[g] += len(line)
 			write_prot()
+			#//////////////////////////////////////////////////
+			print(f'{counter}/{self.df.shape[0]}: Extracted {lfile}.')
+			#//////////////////////////////////////////////////
 		fout.close()
 		print(' done.')
 		print('Combined protein sequences written to db.faa.')
