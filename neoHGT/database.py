@@ -26,7 +26,7 @@ import pandas as pd
 from datetime import datetime
 from multiprocessing import Pool, cpu_count
 #//////////////////////////////////////////////////
-import tracemalloc
+import objgraph
 
 from neoHGT.util import (
 	timestamp, load_configs, get_config, arg2bool, run_command,
@@ -712,7 +712,6 @@ class Database(object):
 		g2n, g2aa = {}, {}
 		#//////////////////////////////////////////////////
 		counter = 0
-		tracemalloc.start()
 		#//////////////////////////////////////////////////
 		for row in self.df.itertuples():
 			g, tid = row.genome, row.taxid
@@ -749,11 +748,8 @@ class Database(object):
 			#//////////////////////////////////////////////////
 			counter += 1
 			print(f'{counter}/{self.df.shape[0]}: Extracted {stem}.')
+			objgraph.show_most_common_types(limit=5)
 			#//////////////////////////////////////////////////
-			snapshot = tracemalloc.take_snapshot()
-			top_stats = snapshot.statistics('lineno')
-			for stat in top_stats[:5]:
-				print(stat)
 		fout.close()
 		print('✅ Done.')
 		print('Combined protein sequences written to db.faa.')
