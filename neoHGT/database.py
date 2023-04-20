@@ -708,11 +708,15 @@ class Database(object):
 				return
 			else:
 				#/*====================*/
-				temp = len(prots[cp]['seq'])
+				tempseq = len(prots[cp]['seq'])
+				tempgs = prots[cp]['gs']
+				temptids = prots[cp]['tids']
 				del prots[cp]
 				#/*====================*/
 				prots[cp] = {}
-				prots[cp]['aa'] = temp
+				prots[cp]['aa'] = tempseq
+				prots[cp]['gs'] = tempgs
+				prots[cp]['tids'] = temptids
 
 		g2n, g2aa = {}, {}
 		#//////////////////////////////////////////////////
