@@ -55,6 +55,8 @@ Run the following command:
 
 ```
 conda activate neoHGT
+```
+```
 pip install git+https://github.com/neoLIZV/neoHGT.git
 ```
 
