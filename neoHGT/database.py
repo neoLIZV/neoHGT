@@ -708,7 +708,7 @@ class Database(object):
 				return
 			else:
 				#/*====================*/
-				prots.remove(cp)
+				del prots[cp]
 				#/*====================*/
 				prots[cp]['aa'] = len(prots[cp]['seq'])
 
