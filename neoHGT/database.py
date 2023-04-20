@@ -133,7 +133,7 @@ def extract_parallel(formatted_input):
 	try:
 		cp = None  # current protein accession
 		output_dir, curr_file, curr_stem, genome, tid = formatted_input
-		print(f'Processing {curr_stem}')
+		#print(f'Processing {curr_stem}')
 		#/*====================*/
 		with gzip.open(curr_file, 'rb') as f:
 			try:
@@ -150,8 +150,8 @@ def extract_parallel(formatted_input):
 						#fcntl.flock(wbuffer, fcntl.LOCK_EX)
 						wbuffer.write(f'>{cp} {prots[cp]["name"]}\n{prots[cp]["seq"]}\n')
 						#fcntl.flock(wbuffer, fcntl.LOCK_UN)
-				except KeyError:
-					return
+				except Exception as internalerr:
+					print(internalerr)
 				else:
 					prots[cp]['aa'] = len(prots[cp]['seq'])
 					del prots[cp]['name']
@@ -178,12 +178,14 @@ def extract_parallel(formatted_input):
 				#fcntl.flock(wbuffer, fcntl.LOCK_EX)
 				wbuffer.write(f'>{cp} {prots[cp]["name"]}\n{prots[cp]["seq"]}\n')
 				#fcntl.flock(wbuffer, fcntl.LOCK_UN)
-		except KeyError:
-			return
+		except Exception as internalerr:
+			print(internalerr)
 		else:
 			prots[cp]['aa'] = len(prots[cp]['seq'])
 			del prots[cp]['name']
 			del prots[cp]['seq']
+		#/*====================*/
+		print(f'Processed {curr_stem}')
 		#/*====================*/
 	except Exception as e:
 		print(e)
