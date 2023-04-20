@@ -745,7 +745,8 @@ class Database(object):
 					g2aa[g] += len(line)
 			write_prot()
 			#//////////////////////////////////////////////////
-			print(f'{counter}/{self.df.shape[0]}: Extracted {lfile}.')
+			counter += 1
+			print(f'{counter}/{self.df.shape[0]}: Extracted {stem}.')
 			#//////////////////////////////////////////////////
 		fout.close()
 		print(' done.')
