@@ -145,10 +145,10 @@ def extract_parallel(formatted_input):
 			if line.startswith('>'):
 				#/*====================*/
 				try:
-					with open(join(output_dir, 'db.faa'), 'a') as wbuffer:
-						fcntl.flock(wbuffer, fcntl.LOCK_EX)
+					with open(join(output_dir, 'db.faa'), 'w') as wbuffer:
+						#fcntl.flock(wbuffer, fcntl.LOCK_EX)
 						wbuffer.write(f'>{cp} {prots[cp]["name"]}\n{prots[cp]["seq"]}\n')
-						fcntl.flock(wbuffer, fcntl.LOCK_UN)
+						#fcntl.flock(wbuffer, fcntl.LOCK_UN)
 				except KeyError:
 					return
 				else:
@@ -173,10 +173,10 @@ def extract_parallel(formatted_input):
 				g2aa[genome] += len(line)
 		#/*====================*/
 		try:
-			with open(join(output_dir, 'db.faa'), 'a') as wbuffer:
-				fcntl.flock(wbuffer, fcntl.LOCK_EX)
+			with open(join(output_dir, 'db.faa'), 'w') as wbuffer:
+				#fcntl.flock(wbuffer, fcntl.LOCK_EX)
 				wbuffer.write(f'>{cp} {prots[cp]["name"]}\n{prots[cp]["seq"]}\n')
-				fcntl.flock(wbuffer, fcntl.LOCK_UN)
+				#fcntl.flock(wbuffer, fcntl.LOCK_UN)
 		except KeyError:
 			return
 		else:
