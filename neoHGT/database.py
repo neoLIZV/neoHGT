@@ -708,9 +708,10 @@ class Database(object):
 				return
 			else:
 				#/*====================*/
+				temp = len(prots[cp]['seq'])
 				del prots[cp]
 				#/*====================*/
-				prots[cp]['aa'] = len(prots[cp]['seq'])
+				prots[cp]['aa'] = temp
 
 		g2n, g2aa = {}, {}
 		#//////////////////////////////////////////////////
