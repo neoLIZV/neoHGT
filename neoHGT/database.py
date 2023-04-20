@@ -674,7 +674,7 @@ class Database(object):
 			for line in results:
 				if line is not None:
 					fb.write(line + '\n')
-		print('Done.')
+		print('✅ Done.')
 
 		# drop genomes that cannot be retrieved
 		if len(failed):
@@ -749,7 +749,7 @@ class Database(object):
 			print(f'{counter}/{self.df.shape[0]}: Extracted {stem}.')
 			#//////////////////////////////////////////////////
 		fout.close()
-		print(' done.')
+		print('✅ Done.')
 		print('Combined protein sequences written to db.faa.')
 
 		self.df['proteins'] = self.df['genome'].map(g2n)
