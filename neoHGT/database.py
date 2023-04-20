@@ -147,11 +147,11 @@ def extract_parallel(formatted_input):
 				#/*====================*/
 				try:
 					with open(join(output_dir, 'db.faa'), 'w') as wbuffer:
-						#fcntl.flock(wbuffer, fcntl.LOCK_EX)
+						fcntl.flock(wbuffer, fcntl.LOCK_EX)
 						wbuffer.write(f'>{cp} {prots[cp]["name"]}\n{prots[cp]["seq"]}\n')
-						#fcntl.flock(wbuffer, fcntl.LOCK_UN)
-				except Exception as internalerr:
-					print(internalerr)
+						fcntl.flock(wbuffer, fcntl.LOCK_UN)
+				except Exception as err:
+					print(err)
 				else:
 					prots[cp]['aa'] = len(prots[cp]['seq'])
 					del prots[cp]['name']
@@ -175,11 +175,11 @@ def extract_parallel(formatted_input):
 		#/*====================*/
 		try:
 			with open(join(output_dir, 'db.faa'), 'w') as wbuffer:
-				#fcntl.flock(wbuffer, fcntl.LOCK_EX)
+				fcntl.flock(wbuffer, fcntl.LOCK_EX)
 				wbuffer.write(f'>{cp} {prots[cp]["name"]}\n{prots[cp]["seq"]}\n')
-				#fcntl.flock(wbuffer, fcntl.LOCK_UN)
-		except Exception as internalerr:
-			print(internalerr)
+				fcntl.flock(wbuffer, fcntl.LOCK_UN)
+		except Exception as err:
+			print(err)
 		else:
 			prots[cp]['aa'] = len(prots[cp]['seq'])
 			del prots[cp]['name']
