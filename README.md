@@ -44,7 +44,7 @@ Next, you will need to manually install diamond by visiting [the official conda 
 You will see a list of files, please look at the begining of the filename, which describes the operating system. After downloading the one that corresponds to your system, you can run
 
 ```
-conda install
+conda install <diamond___.tar.bz2>
 ```
 
 followed by the file you just downloaded (dragging the file to your teminal) to install diamond.
