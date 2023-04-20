@@ -15,7 +15,7 @@
 
 import sys
 from os import remove, makedirs, cpu_count
-from os.path import join, isfile, isdir, getsize, basename
+from os.path import join, isfile, isdir, getsize, basename, exists
 from shutil import which, rmtree
 from time import sleep
 import gzip
@@ -727,40 +727,43 @@ class Database(object):
 			g2n[g], g2aa[g] = 0, 0
 			stem = row.ftp_path.rsplit('/', 1)[-1]
 			lfile = join(ldir, f'{stem}_protein.faa.gz')
-			with gzip.open(lfile, 'rb') as f:
-				try:
-					content = f.read().decode().splitlines()
-				except (OSError, EOFError, TypeError):
-					print(f' skipping corrupted file {stem}.', end='',
-						  flush=True)
-					continue
-			cp = None
-			for line in content:
-				if line.startswith('>'):
-					write_prot()
-					p, name = line[1:].split(None, 1)
-					g2n[g] += 1
-					if p in prots:
-						cp = None
-						prots[p]['gs'].add(g)
-						prots[p]['tids'].add(tid)
-						g2aa[g] += prots[p]['aa']
-					else:
-						cp = p
-						prots[p] = {
-							'name': name, 'gs': {g}, 'tids': {tid}, 'seq': ''}
-				elif cp:
-					line = line.rstrip('*')
-					prots[cp]['seq'] += line
-					g2aa[g] += len(line)
-			write_prot()
-			#//////////////////////////////////////////////////
-			counter += 1
-			print(f'{counter}/{self.df.shape[0]}: Extracted {stem}.')
-			#//////////////////////////////////////////////////
-			#debugging memory leaks
-			# objgraph.show_most_common_types(limit=5)
-			#//////////////////////////////////////////////////
+			if exists(lfile):
+				with gzip.open(lfile, 'rb') as f:
+					try:
+						content = f.read().decode().splitlines()
+					except (OSError, EOFError, TypeError):
+						print(f' skipping corrupted file {stem}.', end='',
+							flush=True)
+						continue
+				cp = None
+				for line in content:
+					if line.startswith('>'):
+						write_prot()
+						p, name = line[1:].split(None, 1)
+						g2n[g] += 1
+						if p in prots:
+							cp = None
+							prots[p]['gs'].add(g)
+							prots[p]['tids'].add(tid)
+							g2aa[g] += prots[p]['aa']
+						else:
+							cp = p
+							prots[p] = {
+								'name': name, 'gs': {g}, 'tids': {tid}, 'seq': ''}
+					elif cp:
+						line = line.rstrip('*')
+						prots[cp]['seq'] += line
+						g2aa[g] += len(line)
+				write_prot()
+				#//////////////////////////////////////////////////
+				counter += 1
+				print(f'{counter}/{self.df.shape[0]}: Extracted {stem}.')
+				#//////////////////////////////////////////////////
+				#debugging memory leaks
+				# objgraph.show_most_common_types(limit=5)
+				#//////////////////////////////////////////////////
+			else:
+				print(f'❌ {lfile} does not exist.')
 		fout.close()
 		print('✅ Done.')
 		print('Combined protein sequences written to db.faa.')
