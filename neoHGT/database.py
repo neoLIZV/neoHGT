@@ -25,6 +25,7 @@ import pandas as pd
 #//////////////////////////////////////////////////
 from datetime import datetime
 from multiprocessing import Pool, cpu_count
+import fcntl
 #//////////////////////////////////////////////////
 
 from neoHGT.util import (
@@ -125,6 +126,69 @@ def download_parallel(formatted_input):
 			return genome
 	except Exception as e:
 		print(e)
+#//////////////////////////////////////////////////
+prots, g2n, g2aa = {}, {}, {}
+
+def extract_parallel(formatted_input):
+	try:
+		cp = None  # current protein accession
+		output_dir, curr_file, curr_stem, genome, tid = formatted_input
+		#/*====================*/
+		with gzip.open(curr_file, 'rb') as f:
+			try:
+				content = f.read().decode().splitlines()
+			except (OSError, EOFError, TypeError):
+				print(f' skipping corrupted file {curr_stem}.', end='', flush=True)
+		#/*====================*/
+		cp = None
+		for line in content:
+			if line.startswith('>'):
+				#/*====================*/
+				try:
+					with open(join(output_dir, 'db.faa'), 'a') as wbuffer:
+						fcntl.flock(wbuffer, fcntl.LOCK_EX)
+						wbuffer.write(f'>{cp} {prots[cp]["name"]}\n{prots[cp]["seq"]}\n')
+						fcntl.flock(wbuffer, fcntl.LOCK_UN)
+				except KeyError:
+					return
+				else:
+					prots[cp]['aa'] = len(prots[cp]['seq'])
+					del prots[cp]['name']
+					del prots[cp]['seq']
+				#/*====================*/
+				p, name = line[1:].split(None, 1)
+				g2n[genome] += 1
+				if p in prots:
+					cp = None
+					prots[p]['gs'].add(genome)
+					prots[p]['tids'].add(tid)
+					g2aa[genome] += prots[p]['aa']
+				else:
+					cp = p
+					prots[p] = {
+						'name': name, 'gs': {genome}, 'tids': {tid}, 'seq': ''}
+			elif cp:
+				line = line.rstrip('*')
+				prots[cp]['seq'] += line
+				g2aa[genome] += len(line)
+		#/*====================*/
+		try:
+			with open(join(output_dir, 'db.faa'), 'a') as wbuffer:
+				fcntl.flock(wbuffer, fcntl.LOCK_EX)
+				wbuffer.write(f'>{cp} {prots[cp]["name"]}\n{prots[cp]["seq"]}\n')
+				fcntl.flock(wbuffer, fcntl.LOCK_UN)
+		except KeyError:
+			return
+		else:
+			prots[cp]['aa'] = len(prots[cp]['seq'])
+			del prots[cp]['name']
+			del prots[cp]['seq']
+		#/*====================*/
+		print(f'Extracted {curr_stem}')
+		#/*====================*/
+	except Exception as e:
+		print(e)
+		return
 #//////////////////////////////////////////////////
 
 class Database(object):
@@ -649,6 +713,7 @@ class Database(object):
 		ldir = join(self.down, 'faa')
 		makedirs(ldir, exist_ok=True)
 		failed = []
+  
 		#//////////////////////////////////////////////////
 		list_of_urls = []
 		for row in self.df.itertuples():
@@ -670,11 +735,12 @@ class Database(object):
 		results = pool.map(download_parallel, list_of_urls)
 		pool.close()
 		pool.join()
-		with open(f'{ldir}/download_result_{datetime.now().strftime("%Y-%m-%d%H:%M:%S")}.txt', 'w') as fb:
-			for line in results:
-				if line is not None:
-					fb.write(line + '\n')
-		print('Done.')
+		if results is not None:
+			with open(f'{ldir}/download_result_{datetime.now().strftime("%Y-%m-%d%H:%M:%S")}.txt', 'w') as fb:
+				for line in results:
+					if line is not None:
+						fb.write(line + '\n')
+		print('✅ Done.')
 
 		# drop genomes that cannot be retrieved
 		if len(failed):
@@ -694,62 +760,32 @@ class Database(object):
 		print('Extracting downloaded genomic data...', end='', flush=True)
 		ldir = join(self.down, 'faa')
 		prots = {}
-		cp = None  # current protein accession
-		fout = open(join(self.output, 'db.faa'), 'w')
 
-		def write_prot():
-			# some protein accessions may be duplicated
-			try:
-				fout.write(f'>{cp} {prots[cp]["name"]}\n{prots[cp]["seq"]}\n')
-			except KeyError:
-				return
-			else:
-				prots[cp]['aa'] = len(prots[cp]['seq'])
-				del prots[cp]['name']
-				del prots[cp]['seq']
-
-		g2n, g2aa = {}, {}
-		#//////////////////////////////////////////////////
-		counter = 0
+		list_of_files = []
 		#//////////////////////////////////////////////////
 		for row in self.df.itertuples():
 			g, tid = row.genome, row.taxid
 			g2n[g], g2aa[g] = 0, 0
 			stem = row.ftp_path.rsplit('/', 1)[-1]
 			lfile = join(ldir, f'{stem}_protein.faa.gz')
-			with gzip.open(lfile, 'rb') as f:
-				try:
-					content = f.read().decode().splitlines()
-				except (OSError, EOFError, TypeError):
-					print(f' skipping corrupted file {stem}.', end='',
-						  flush=True)
-					continue
-			cp = None
-			for line in content:
-				if line.startswith('>'):
-					write_prot()
-					p, name = line[1:].split(None, 1)
-					g2n[g] += 1
-					if p in prots:
-						cp = None
-						prots[p]['gs'].add(g)
-						prots[p]['tids'].add(tid)
-						g2aa[g] += prots[p]['aa']
-					else:
-						cp = p
-						prots[p] = {
-							'name': name, 'gs': {g}, 'tids': {tid}, 'seq': ''}
-				elif cp:
-					line = line.rstrip('*')
-					prots[cp]['seq'] += line
-					g2aa[g] += len(line)
-			write_prot()
-			#//////////////////////////////////////////////////
-			counter += 1
-			print(f'{counter}/{self.df.shape[0]}: Extracted {stem}.')
-			#//////////////////////////////////////////////////
-		fout.close()
-		print(' done.')
+			#/*====================*/
+			temp = (self.output, lfile, stem, g, tid)
+			list_of_files.append(temp)
+			#/*====================*/
+		#//////////////////////////////////////////////////
+		pool = Pool(cpu_count())
+		print(f"There are {cpu_count()} CPU cores. Commencing parallel extract sequence. Extracting {self.df.shape[0]} files.")
+		results = pool.map(extract_parallel, list_of_files)
+		pool.close()
+		pool.join()
+		#/*====================*/
+		if results is not None:
+			with open(f'{ldir}/db_result_{datetime.now().strftime("%Y-%m-%d%H:%M:%S")}.txt', 'w') as fb:
+				for line in results:
+					if line is not None:
+						fb.write(line + '\n')
+		#//////////////////////////////////////////////////
+		print('✅ Done.')
 		print('Combined protein sequences written to db.faa.')
 
 		self.df['proteins'] = self.df['genome'].map(g2n)
