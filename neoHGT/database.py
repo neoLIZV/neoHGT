@@ -133,6 +133,7 @@ def extract_parallel(formatted_input):
 	try:
 		cp = None  # current protein accession
 		output_dir, curr_file, curr_stem, genome, tid = formatted_input
+		print(f'Processing {curr_stem}')
 		#/*====================*/
 		with gzip.open(curr_file, 'rb') as f:
 			try:
@@ -183,8 +184,6 @@ def extract_parallel(formatted_input):
 			prots[cp]['aa'] = len(prots[cp]['seq'])
 			del prots[cp]['name']
 			del prots[cp]['seq']
-		#/*====================*/
-		print(f'Extracted {curr_stem}')
 		#/*====================*/
 	except Exception as e:
 		print(e)
