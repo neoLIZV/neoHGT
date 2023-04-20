@@ -729,7 +729,7 @@ class Database(object):
 			lfile = join(ldir, f'{stem}_protein.faa.gz')
 			with gzip.open(lfile, 'rb') as f:
 				try:
-					content = f.read().decode().rstrip("\n") # .splitlines() causes memory leak
+					content = f.read().decode().splitlines()
 				except (OSError, EOFError, TypeError):
 					print(f' skipping corrupted file {stem}.', end='',
 						  flush=True)
