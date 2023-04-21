@@ -692,7 +692,7 @@ class Database(object):
 		Write protein sequences of all genomes into db.faa.
 		Write protein to genomes(s) map to genome.map.gz.
 		"""
-		print('Extracting downloaded genomic data...', end='', flush=True)
+		print('Extracting downloaded genomic data...\n', end='', flush=True)
 		ldir = join(self.down, 'faa')
 		#/*====================*/
 		prots = {} # memory leak warning
@@ -768,6 +768,7 @@ class Database(object):
 		print('✅ Done.')
 		print('Combined protein sequences written to db.faa.')
 
+		print('☕️ Do not worry if you encounter a bug afterwards. It is likely that the program will run out of memory and invoke a kill command by the OS.')
 		self.df['proteins'] = self.df['genome'].map(g2n)
 		self.df['residues'] = self.df['genome'].map(g2aa)
 		self.p2tids = {k: v['tids'] for k, v in prots.items()}
