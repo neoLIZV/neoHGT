@@ -67,6 +67,11 @@ pip install git+https://github.com/neoLIZV/neoHGT.git
 
 Compared to HGTector, neoHGT not only fixes some known bugs of HGTector but also uses multi-processes to enable parallel downloading, saving you time on the database downloading process.
 
+neoHGT also provides ```server.py``` to help you download and install the database without Graphical User Interface.
+
+If you prefer downloading manually, please first visit [this OneDrive link](https://arizonastateu-my.sharepoint.com/personal/qzhu44_asurite_asu_edu/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fqzhu44%5Fasurite%5Fasu%5Fedu%2FDocuments%2FPublic%2FHGTector) and download the latest ```hgtdb___.tar.xz``` file.
+
+
 The command that I used to build the database is:
 
 ```
