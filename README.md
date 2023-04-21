@@ -136,6 +136,8 @@ Make sure you are still in the ```<DATABASE_DIRECTORY>```, then enter the follow
 
 ```
 mkdir diamond
+```
+```
 diamond makedb --threads 64 --in db.faa --taxonmap prot.accession2taxid.FULL --taxonnodes taxdump/nodes.dmp --taxonnames taxdump/names.dmp --db diamond/db
 ```
 
