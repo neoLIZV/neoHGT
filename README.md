@@ -87,6 +87,8 @@ This following table explains the command and options available for you to build
 | -c (-cats)      | archaea, bacteria, fungi, invertebrate, metagenomes, mitochondrion, plant, plasmid, plastid, protozoa, unknown, vertebrate_mammalian, vertebrate_other, and viral (derived from the [folder names of NCBI RefSeq database](https://ftp.ncbi.nlm.nih.gov/genomes/refseq/)) |
 | -o      | Output database directory |
 
+___
+
 Known issue:
 
 Don't panic if you see this error message:
@@ -111,6 +113,8 @@ Otherwise, if the previous command returns you a list that starts with ```drwxr-
 
 For more advanced options such as excluding specific taxids, please refer to HGTector's [Database](https://github.com/qiyunlab/HGTector/blob/master/doc/database.md) documentation.
 
+___
+
 ## Compiling
 
 After seeing the program finished with ```Done```, you can proceed with manual compiling.
@@ -120,6 +124,8 @@ I will only be using Diamond because it is optimized and faster.
 Step 1/2:
 ```
 cd <DATABASE_DIRECTORY>
+```
+```
 echo $'accession.version\ttaxid' | cat - <(zcat taxon.map.gz) > prot.accession2taxid.FULL
 ```
 In this step, you may encounter a strange error like ```zcat: can't stat: taxon.map.gz (taxon.map.gz.Z): No such file or directory```. If you see this, just simply rename the ```taxon.map.gz``` file into ```taxon.map.gz.Z```.
