@@ -30,7 +30,7 @@ from math import log
 from urllib.parse import quote
 from urllib.request import urlopen, HTTPError, URLError
 
-from hgtector.util import (
+from neoHGT.util import (
     timestamp, load_configs, get_config, arg2bool, list_from_param, file2id,
     id2file_map, read_taxdump, read_input_prots, read_prot2taxid,
     get_product, seqid2accver, write_fasta, run_command, contain_words,
