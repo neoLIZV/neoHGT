@@ -173,7 +173,9 @@ I will only be using Diamond because it is optimized and faster.
 
 ### If you followed the instructions of <b>Option1</b>:
 
-Make sure you are still in the ```<DATABASE_DIRECTORY>```, then enter the following command:
+```
+cd <DATABASE_DIRECTORY>
+```
 
 ```
 mkdir diamond
