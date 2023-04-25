@@ -16,11 +16,11 @@ To see the previous version neoHGT1, you may find it [here](https://www.github.c
 1. [About](#about)
 2. [Installation](#installation)
 3. [Database](#database)
-4. [Search](#search)
-5. [Analyze](#analyze)
-6. [Lastly](#lastly)
-7. [License](#license)
-8. [Copyright](#copyright)
+4. [Compiling](#compiling)
+5. [Search](#search)
+6. [Analyze](#analyze)
+7. [Uninstall](#lastly)
+8. [License](#license)
 
 ## About
 **neoHGT** can predict the horizontal/lateral gene transfer (HGT) for species of interest. This project is based on [HGTector](https://github.com/qiyunlab/HGTector) developed by Qiyun lab, but the difference is that I have fixed some known bugs, optimized the downloading process by leveraging multi-processing, and improving the overall stability of the software.
@@ -39,7 +39,7 @@ conda create -n neoHGT -c conda-forge python=3 pyyaml pandas matplotlib scikit-l
 
 Step 2/3:
 
-Next, you will need to manually install diamond by visiting [the official conda webpage](https://anaconda.org/bioconda/diamond/files).
+Next, you will need to manually install diamond by visiting [the official conda webpage](https://anaconda.org/bioconda/diamond/files?version=0.9.26).
 
 You will see a list of files, please look at the begining of the filename, which describes the operating system. After downloading the one that corresponds to your system, you can run
 
@@ -72,8 +72,50 @@ Compared to HGTector, neoHGT not only fixes some known bugs of HGTector but also
 
 neoHGT also provides ```server.py``` to help you download and install the database without Graphical User Interface.
 
-If you prefer downloading manually, please first visit [this OneDrive link](https://arizonastateu-my.sharepoint.com/personal/qzhu44_asurite_asu_edu/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fqzhu44%5Fasurite%5Fasu%5Fedu%2FDocuments%2FPublic%2FHGTector) and download the latest ```hgtdb___.tar.xz``` file.
+But the recommended way is to download manually:
 
+## Option1
+### (Most comprehensive and most up-to-date but time-consuming):
+
+First, we need ```taxonmap```, where you have two options to obtain the file(s):
+
+This following link will produce a smaller, more compact ```taxdump``` (around 0.4GB after decompression). You can paste the link on your broswer to start downloading:
+```
+https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.Z
+```
+
+This following link will produce the latest, more comprehensive ```taxdump``` (around 1.8GB after decompression):
+
+```
+https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/new_taxdump/new_taxdump.tar.Z
+```
+
+___
+
+Next, we will need ```prot.accession2taxid```, and there are two options:
+
+This following link will produce a smaller, more compact ```prot.accession2taxid``` (around 7GB). You can paste the link on your broswer to start downloading:
+
+```
+https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.gz
+```
+
+This following link will produce the latest, more comprehensive ```prot.accession2taxid``` (around 12GB):
+
+```
+https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.FULL.gz
+```
+
+## Option2:
+### (Time-saving but less comprehensive and less up-to-date)
+
+There exists a pre-built database on [this OneDrive link](https://arizonastateu-my.sharepoint.com/personal/qzhu44_asurite_asu_edu/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fqzhu44%5Fasurite%5Fasu%5Fedu%2FDocuments%2FPublic%2FHGTector) where you can just download the latest ```hgtdb___.tar.xz``` file, and you can skip the database compiling steps and jump to the [Compiling](#compiling) step.
+
+___
+
+## Database downloading
+
+After obtaining ```taxonmap``` and ```prot.accession2taxid```, we will need to run ```neoHGT database``` command to download around 291,000 genome files to build the diamond database (~90GB) depending on how many categories you have chosen.
 
 The command that I used to build the database is:
 
@@ -116,18 +158,45 @@ Otherwise, if the previous command returns you a list that starts with ```drwxr-
 
 For more advanced options such as excluding specific taxids, please refer to HGTector's [Database](https://github.com/qiyunlab/HGTector/blob/master/doc/database.md) documentation.
 
+After seeing the program finished with
+```
+✅ Done
+Combined protein sequences written to db.faa.
+```
+it means that you can proceed with manual compiling.
+
 ___
 
 ## Compiling
 
-After seeing the program finished with ```Done```, you can proceed with manual compiling.
-
 I will only be using Diamond because it is optimized and faster.
 
+### If you followed the instructions of <b>Option1</b>:
+
+Make sure you are still in the ```<DATABASE_DIRECTORY>```, then enter the following command:
+
+```
+mkdir diamond
+```
+
+And then carefully replace the entry with ```<‼️>``` with the files you downloaded and extracted. Make sure the files are all under the root folder of your ```<DATABASE_DIRECTORY>```.
+
+```
+diamond makedb --threads 64 --in db.faa
+--taxonmap <‼️prot.accession2taxid.FULL>
+--taxonnodes <‼️taxdump>/nodes.dmp
+--taxonnames <‼️taxdump>/names.dmp
+--db diamond/db
+```
+
+### If you followed the instructions of <b>Option2</b>:
+
 Step 1/2:
+
 ```
 cd <DATABASE_DIRECTORY>
 ```
+
 ```
 echo $'accession.version\ttaxid' | cat - <(zcat taxon.map.gz) > prot.accession2taxid.FULL
 ```
@@ -144,8 +213,6 @@ mkdir diamond
 diamond makedb --threads 64 --in db.faa --taxonmap prot.accession2taxid.FULL --taxonnodes taxdump/nodes.dmp --taxonnames taxdump/names.dmp --db diamond/db
 ```
 
-Feel free to clean up everything except for diamond database and the taxdump files because that's the only file we need for the ```search``` process.
-
 ## Search
 
 After ensuring the conda environment,
@@ -153,7 +220,8 @@ After ensuring the conda environment,
 ```
 conda activate neoHGT
 ```
-, this following command will perform the search process:
+
+this following command will perform the search process:
 
 ```
 neoHGT search -i <input_file.faa.gz> -o . -m diamond -p 32 -d <diamond_db> -t <taxdump_dir>
