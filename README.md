@@ -74,7 +74,7 @@ neoHGT also provides ```server.py``` to help you download and install the databa
 
 But the recommended way is to download manually:
 
-## Option1
+## Option1 (Manual)
 ### (Most comprehensive and most up-to-date but time-consuming):
 
 First, we need ```taxonmap```, where you have two options to obtain the file(s):
@@ -106,7 +106,7 @@ This following link will produce the latest, more comprehensive ```prot.accessio
 https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/accession2taxid/prot.accession2taxid.FULL.gz
 ```
 
-## Option2:
+## Option2 (Manual):
 ### (Time-saving but less comprehensive and less up-to-date)
 
 There exists a pre-built database on [this OneDrive link](https://arizonastateu-my.sharepoint.com/personal/qzhu44_asurite_asu_edu/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fqzhu44%5Fasurite%5Fasu%5Fedu%2FDocuments%2FPublic%2FHGTector) where you can just download the latest ```hgtdb___.tar.xz``` file, and you can skip the database compiling steps and jump to the [Compiling](#compiling) step.
