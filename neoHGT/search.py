@@ -2134,7 +2134,7 @@ class Search(object):
 		if extrargs:
 			cmd += ' ' + extrargs
 		ec, out = run_command(cmd, merge=False)
-		if ec:
+		if ec != 0: # RC=0 indicates successful completion
 			raise ValueError(f'diamond failed with error code {ec}.')
 
 		remove(tmpin)
