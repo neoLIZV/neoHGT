@@ -5,7 +5,7 @@
 	</a><br>
 </p>
 
-# neoHGT2: Horizontal Gene Transfer
+# neoHGT2: 🧬 Horizontal Gene Transfer
 
 Updated on April 2023.
 
@@ -23,7 +23,7 @@ To see the previous version neoHGT1, you may find it [here](https://www.github.c
 8. [License](#license)
 
 ## About
-**neoHGT** can predict the horizontal/lateral gene transfer (HGT) for species of interest. This project is based on [HGTector](https://github.com/qiyunlab/HGTector) developed by Qiyun lab, but the difference is that I have fixed some known bugs, optimized the downloading process by leveraging multi-processing, and improving the overall stability of the software.
+**neoHGT** can predict the horizontal/lateral gene transfer (HGT) for species of interest. This open-source project is based on [HGTector](https://github.com/qiyunlab/HGTector) developed by Qiyun lab, but the difference is that I have fixed some known bugs, optimized the downloading process by leveraging multi-processing, and improving the overall stability of the software.
 
   
 
