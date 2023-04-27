@@ -167,6 +167,8 @@ class Search(object):
 
 				# batch homology search
 				print(self.pcmap)
+				# todo: general fix:
+				# temporary fix by replacing self.pcmap[sid] with self.pcmap.values()[0]
 				res = self.search_wf(
 					batch, self.pcmap.values()[0] if self.method == 'precomp'
 					else None)
