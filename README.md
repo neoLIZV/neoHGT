@@ -181,7 +181,7 @@ cd <DATABASE_DIRECTORY>
 mkdir diamond
 ```
 
-And then carefully replace the entry with ```<‼️>``` with the files you downloaded and extracted. Make sure the files are all under the root folder of your ```<DATABASE_DIRECTORY>```.
+And then carefully replace the entry with ```<‼️>``` with the files you downloaded and extracted. Make sure the files are all under the root folder of your ```<DATABASE_DIRECTORY>```. Here, I used several lines to make it clear, but in practice you should stick to one sentence without pressing the ```return``` key.
 
 ```
 diamond makedb --threads 64 --in db.faa
@@ -217,21 +217,80 @@ diamond makedb --threads 64 --in db.faa --taxonmap prot.accession2taxid.FULL --t
 
 ## Search
 
-After ensuring the conda environment,
+The following approach is considered "safer" as you will manually execute the search using ```diamond``` or ```blastp```, which can reduce the chances of bugs due to third-libray support (on diamond for example).
+
+Step 1/3:
 
 ```
 conda activate neoHGT
 ```
 
-this following command will perform the search process:
+Step 2/3:
+
+(here I used several lines to make it clear, but in practice you should stick to one sentence without pressing the ```return``` key)
+
+```
+diamond blastp
+--query <input_file.faa>
+--db <diamond_db>
+--outfmt 6 qseqid sseqid pident evalue bitscore qcovhsp staxids
+> <output_directory>/result.txt
+```
+
+Step 3/3:
+
+```
+neoHGT search -i <input_file.faa>
+-m precomp -s <output_directory>/result.txt
+-t <taxdump_dir> [--taxmap taxon.map.gz]
+-o <output_directory>
+```
+
+___
+
+If for some reasons ```diamond``` doesn't work, the alternative will be ```blastp```, which can be found [here](https://blast.ncbi.nlm.nih.gov/doc/blast-help/downloadblastdata.html). But first, you will need to compile blastp database by following this [artilce](https://www.ncbi.nlm.nih.gov/books/NBK569841/).
+
+The command to make blast database is more or less the following:
+
+```
+makeblastdb -parse_seqids -in db.faa
+-out <blast_db_path>/<name_of_db>
+-title <name_of_db>
+-taxid_map <taxon.map>
+```
+
+Here the taxon.map file can be obtained by running:
+
+```
+gunzip -k taxon.map.gz
+```
+
+Then, enter the following command:
+
+```
+blastp -query <input_file.faa>
+-db <blast_db_path>/<name_of_db>
+-outfmt "6 qaccver saccver pident evalue bitscore qcovhsp staxids"
+> <output_directory>/result_blast.txt
+```
+
+And lastly, 
+
+```
+neoHGT search -i <input_file.faa>
+-m precomp -s <output_directory>/result_blast.txt
+-t <taxdump_dir> [--taxmap taxon.map.gz]
+-o <output_directory>
+```
+___
+
+Apart from the manual approach, this following command will perform the search process all in one place, but it is not recommended because a known compatibility bug was discovered and confirmed due to the dependency upgrade of ```diamond```:
 
 ```
 neoHGT search -i <input_file.faa.gz> -o . -m diamond -p 32 -d <diamond_db> -t <taxdump_dir>
 ```
 
-neoHGT added `try` and `except` to make the searching process more robust.
-
-To perform a search, please refer to [HGTector's Search](https://github.com/qiyunlab/HGTector/blob/master/doc/search.md) documentation.
+To see more details, please refer to [HGTector's issue page](https://github.com/qiyunlab/HGTector/issues/114).
 
 ## Analyze
 
