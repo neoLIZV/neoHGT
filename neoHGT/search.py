@@ -170,7 +170,7 @@ class Search(object):
 				# todo: general fix:
 				# temporary fix by replacing self.pcmap[sid] with self.pcmap.values()[0]
 				res = self.search_wf(
-					batch, self.pcmap.values()[0] if self.method == 'precomp'
+					batch, list(self.pcmap.values())[0] if self.method == 'precomp'
 					else None)
 
 				# update taxIds of hits
