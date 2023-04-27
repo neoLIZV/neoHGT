@@ -311,7 +311,7 @@ neoHGT analyze -i <output.tsv>
 
 Above, I used several lines to make things clear, but in practice you should stick to one line without pressing the ```return``` key.
 
-To perform analysis, please refer to [HGTector's Analyze](https://github.com/qiyunlab/HGTector/blob/master/doc/analyze.md) documentation.
+Which will generate several files, and the most important one is ```scatter.pdf```, which is the main output of neoHGT.
 
 
 ## Lastly
@@ -321,8 +321,6 @@ To uninstall, you may run:
 conda remove -n neoHGT --all
 conda uninstall bioconda
 ```
-
-For comprehensive guideline, please refer to [HGTector's Installation](https://github.com/qiyunlab/HGTector/blob/master/doc/install.md) for full information.
 
 
 ## Publication
@@ -340,6 +338,6 @@ This repository was a result of my internship at LOB - Laboratoire d'Optique et 
 
 ## License
 
-Copyright (c) 2023-, [neoLIZV](https://github.com/neoLIZV). Licensed under [BSD 3-clause](http://opensource.org/licenses/BSD-3-Clause).
+Copyright (c) 2023-, [Zhihui LI (@neoLIZV)](https://github.com/neoLIZV). Licensed under [BSD 3-clause](http://opensource.org/licenses/BSD-3-Clause).
 
 Copyright (c) 2013-, [Qiyun Zhu](mailto:qiyunzhu@gmail.com) and [Katharina Dittmar](mailto:katharinad@gmail.com). Licensed under [BSD 3-clause](http://opensource.org/licenses/BSD-3-Clause). See full license [statement](LICENSE).
