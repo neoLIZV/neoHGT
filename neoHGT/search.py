@@ -166,7 +166,7 @@ class Search(object):
 			for batch in batches:
 
 				# batch homology search
-				print(self.pcma)
+				print(self.pcmap)
 				res = self.search_wf(
 					batch, self.pcmap[sid] if self.method == 'precomp'
 					else None)
