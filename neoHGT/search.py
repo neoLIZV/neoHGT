@@ -166,6 +166,7 @@ class Search(object):
 			for batch in batches:
 
 				# batch homology search
+				print(self.pcma)
 				res = self.search_wf(
 					batch, self.pcmap[sid] if self.method == 'precomp'
 					else None)
@@ -1538,8 +1539,8 @@ class Search(object):
 					'6 qseqid sseqid pident evalue bitscore qcovhsp staxids'])
 		ec, out = run_command(' '.join(cmd), merge=False)
 		remove(tmpin)
-		#if ec:
-		#	raise ValueError(f'diamond failed with error code {ec}.')
+		if ec:
+			raise ValueError(f'diamond failed with error code {ec}.')
 		return self.parse_def_table(out)
 
 	def remote_search(self, seqs):
@@ -2120,8 +2121,8 @@ class Search(object):
 			'--threads', str(self.threads),
 			'--tmpdir', self.tmpdir))
 		ec, out = run_command(cmd, merge=False)
-		#if ec:
-		#	raise ValueError(f'diamond failed with error code {ec}.')
+		if ec:
+			raise ValueError(f'diamond failed with error code {ec}.')
 
 		# perform search
 		cmd = ' '.join((
@@ -2134,8 +2135,8 @@ class Search(object):
 		if extrargs:
 			cmd += ' ' + extrargs
 		ec, out = run_command(cmd, merge=False)
-		#if ec != 0 or ec != 1: # RC=0 indicates successful completion
-		#	raise ValueError(f'diamond failed with error code {ec}.')
+		if ec: # RC=0 indicates successful completion
+			raise ValueError(f'diamond failed with error code {ec}.')
 
 		remove(tmpin)
 		remove(tmpdb)

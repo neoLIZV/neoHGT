@@ -242,7 +242,7 @@ Step 3/3:
 ```
 neoHGT search -i <input_file.faa>
 -m precomp -s <output_directory>/result.txt
--t <taxdump_dir> [--taxmap taxon.map.gz]
+-t <taxdump_dir>
 -o <output_directory>
 ```
 
@@ -279,7 +279,7 @@ And lastly,
 ```
 neoHGT search -i <input_file.faa>
 -m precomp -s <output_directory>/result_blast.txt
--t <taxdump_dir> [--taxmap taxon.map.gz]
+--taxmap <taxon.map.gz>
 -o <output_directory>
 ```
 ___
