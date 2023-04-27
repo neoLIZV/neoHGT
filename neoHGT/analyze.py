@@ -746,7 +746,7 @@ class Analyze(object):
         for group in groups:
             print(f'{group.capitalize()} group:')
             self.plot_hist(self.df[group].tolist(),
-                           join(self.output, f'{group}.hist.png'))
+                           join(self.output, f'{group}.hist.pdf'))
 
             # cannot cluster constant data
             if self.df[group].std() == 0.0:
@@ -863,7 +863,7 @@ class Analyze(object):
 
             # plot density function and thresholds
             self.plot_density(x, y, peak, valley, th,
-                              join(self.output, f'{group}.kde.png'))
+                              join(self.output, f'{group}.kde.pdf'))
 
             return th
         else:
@@ -1154,7 +1154,7 @@ class Analyze(object):
             if not self.low_part or ratio <= self.low_part:
                 print(f'  Auto-determined bandwidth: {bw:g}.')
                 self.plot_density(x, y, peak, valley, th,
-                                  join(self.output, f'{group}.kde.png'))
+                                  join(self.output, f'{group}.kde.pdf'))
                 return th
         return 0.0
 
@@ -1220,11 +1220,11 @@ class Analyze(object):
         Notes
         -----
         1. Generate a scatter plot with putative HGTs colored.
-        2. Export scatter plot to image file `scatter.png`.
+        2. Export scatter plot to image file `scatter.pdf`.
         """
         fig = plt.figure(figsize=(5, 5))
         plt.scatter('close', 'distal', c='hgt', data=self.df)
         plt.xlabel('Close')
         plt.ylabel('Distal')
-        save_figure(fig, join(self.output, 'scatter.png'))
+        save_figure(fig, join(self.output, 'scatter.pdf'))
         plt.close()

@@ -246,6 +246,8 @@ neoHGT search -i <input_file.faa>
 -o <output_directory>
 ```
 
+Checkout the ```.tsv``` file in your ```<output_directory>```, and if it's non-empty, you can proceed to the [Analyze](#analyze) step.
+
 ___
 
 If for some reasons ```diamond``` doesn't work, the alternative will be ```blastp```, which can be found [here](https://blast.ncbi.nlm.nih.gov/doc/blast-help/downloadblastdata.html). But first, you will need to compile blastp database by following this [artilce](https://www.ncbi.nlm.nih.gov/books/NBK569841/).
@@ -279,9 +281,12 @@ And lastly,
 ```
 neoHGT search -i <input_file.faa>
 -m precomp -s <output_directory>/result_blast.txt
---taxmap <taxon.map.gz>
+-t <taxdump_dir>
 -o <output_directory>
 ```
+
+Checkout the ```.tsv``` file in your ```<output_directory>```, and if it's non-empty, you can proceed to the [Analyze](#analyze) step.
+
 ___
 
 Apart from the manual approach, this following command will perform the search process all in one place, but it is not recommended because a known compatibility bug was discovered and confirmed due to the dependency upgrade of ```diamond```:
@@ -293,6 +298,12 @@ neoHGT search -i <input_file.faa.gz> -o . -m diamond -p 32 -d <diamond_db> -t <t
 To see more details, please refer to [HGTector's issue page](https://github.com/qiyunlab/HGTector/issues/114).
 
 ## Analyze
+
+The command for analyzing the obtained ```.tsv``` file is:
+
+```
+neoHGT analyze -i <output.tsv>  -t <taxdump_dir> -o <output_dir>
+```
 
 neoHGT changed the output format of the graph from `.png` to `.pdf` for better resolution and publication purposes.
 
