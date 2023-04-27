@@ -168,7 +168,7 @@ class Search(object):
 				# batch homology search
 				print(self.pcmap)
 				res = self.search_wf(
-					batch, self.pcmap[sid] if self.method == 'precomp'
+					batch, self.pcmap.values()[0] if self.method == 'precomp'
 					else None)
 
 				# update taxIds of hits
