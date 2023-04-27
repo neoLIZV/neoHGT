@@ -181,7 +181,7 @@ cd <DATABASE_DIRECTORY>
 mkdir diamond
 ```
 
-And then carefully replace the entry with ```<‼️>``` with the files you downloaded and extracted. Make sure the files are all under the root folder of your ```<DATABASE_DIRECTORY>```. Here, I used several lines to make it clear, but in practice you should stick to one sentence without pressing the ```return``` key.
+And then carefully replace the entry with ```<‼️>``` with the files you downloaded and extracted. Make sure the files are all under the root folder of your ```<DATABASE_DIRECTORY>```. Below, I used several lines to make things clear, but in practice you should stick to one line without pressing the ```return``` key.
 
 ```
 diamond makedb --threads 64 --in db.faa
@@ -227,7 +227,7 @@ conda activate neoHGT
 
 Step 2/3:
 
-(here I used several lines to make it clear, but in practice you should stick to one sentence without pressing the ```return``` key)
+(Below, I used several lines to make things clear, but in practice you should stick to one line without pressing the ```return``` key)
 
 ```
 diamond blastp
