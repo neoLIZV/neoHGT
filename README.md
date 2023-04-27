@@ -299,13 +299,17 @@ To see more details, please refer to [HGTector's issue page](https://github.com/
 
 ## Analyze
 
+neoHGT changed the output format of the graph from `.png` to `.pdf` for better resolution and publication purposes.
+
 The command for analyzing the obtained ```.tsv``` file is:
 
 ```
-neoHGT analyze -i <output.tsv>  -t <taxdump_dir> -o <output_dir>
+neoHGT analyze -i <output.tsv>
+-t <taxdump_dir>
+-o <output_dir>
 ```
 
-neoHGT changed the output format of the graph from `.png` to `.pdf` for better resolution and publication purposes.
+Above, I used several lines to make things clear, but in practice you should stick to one line without pressing the ```return``` key.
 
 To perform analysis, please refer to [HGTector's Analyze](https://github.com/qiyunlab/HGTector/blob/master/doc/analyze.md) documentation.
 
