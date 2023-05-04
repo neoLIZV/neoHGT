@@ -309,9 +309,22 @@ neoHGT analyze -i <output.tsv>
 -o <output_dir>
 ```
 
-Above, I used several lines to make things clear, but in practice you should stick to one line without pressing the ```return``` key.
-
 Which will generate several files, and the most important one is ```scatter.pdf```, which is the main output of neoHGT.
+
+___
+
+For the rigor of research publication purposes, you might be interested in having complete control of the variable such as ```--self-tax``` and ```--close-tax``` because otherwise the program will auto-infer these values.
+
+```
+neoHGT analyze -i <output.tsv>
+-t <taxdump_dir>
+-o <output_dir>
+--self-tax <NCBI Taxonomy ID>
+--close-tax <NCBI Taxonomy ID>
+```
+___
+
+Above, I used several lines to make things clear, but in practice you should stick to one line without pressing the ```return``` key.
 
 
 ## Lastly
