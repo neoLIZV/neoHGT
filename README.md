@@ -7,7 +7,7 @@
 
 # neoHGT2: 🧬 Horizontal Gene Transfer
 
-Updated on April 2023.
+Updated in May 2023.
 
 To see the previous version neoHGT1, you may find it [here](https://www.github.com/cgneo/neoHGT).
 
