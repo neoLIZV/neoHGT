@@ -315,6 +315,10 @@ class Database(object):
 			# read summary
 			print(f'Reading {target} assembly summary...', end='', flush=True)
 			df = pd.read_table(lfile, skiprows=1, low_memory=False)
+			# ===== bug fix =====
+			col = df.columns[0]
+			if col.startswith('#'):
+				df.rename(columns={col: col.lstrip('# ')}, inplace=True)
 			print(' done.')
 			return df
 
@@ -390,7 +394,7 @@ class Database(object):
 		asmset = set(get_categories('RefSeq'))
 		if self.genbank:
 			asmset.update(get_categories('GenBank'))
-		self.df = self.df[self.df['# assembly_accession'].isin(asmset)]
+		self.df = self.df[self.df['assembly_accession'].isin(asmset)]
 		print(f'  Total number of genomes in categories: {self.df.shape[0]}.')
 
 	def filter_genomes(self):
@@ -414,7 +418,7 @@ class Database(object):
 
 		# non-redundant genome IDs
 		# typically not necessary, just in case
-		self.df.rename(columns={'# assembly_accession': 'accession'},
+		self.df.rename(columns={'assembly_accession': 'accession'},
 					   inplace=True)
 		#//////////////////////////////////////////////////
 		# bug: split('.', 1) is not in the standard of modern Python
